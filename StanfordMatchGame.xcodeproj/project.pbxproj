@@ -55,10 +55,10 @@
 		8401515329BCD3FC0083F37D /* StanfordMatchGame */ = {
 			isa = PBXGroup;
 			children = (
-				8401515429BCD3FC0083F37D /* StanfordMatchGameApp.swift */,
 				8401515629BCD3FC0083F37D /* ContentView.swift */,
 				8401516229BCEA960083F37D /* MemoryGame.swift */,
 				8401516429BCED5B0083F37D /* EmojiMemoryGame.swift */,
+				8401515429BCD3FC0083F37D /* StanfordMatchGameApp.swift */,
 				8401515829BCD3FE0083F37D /* Assets.xcassets */,
 				8401515A29BCD3FE0083F37D /* Preview Content */,
 			);
