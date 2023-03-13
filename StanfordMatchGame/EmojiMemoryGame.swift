@@ -7,30 +7,27 @@
 
 import SwiftUI
 
-/*
-func makeCardContent(index: Int)-> String{
-    return "🥲"
-}
- */
-
 class EmojiMemoryGame: ObservableObject {
-    static let emojis = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎️", "🚓", "🚑", "🚒", "🚐", "🛻", "🚚", "🚛", "🚜", "🛵", "🏍️", "🛺", "🚃", "✈️", "🚁", "⛵️", "🚲", "🛴", "🚘"]
-    static func createMemoryGame()-> MemoryGame<String>{
-        MemoryGame<String>(numberOfPairsOfCards: 4) { pairIndex in
+    typealias Card = MemoryGame<String>.Card
+    private static let emojis = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎️", "🚓", "🚑", "🚒", "🚐", "🛻", "🚚", "🚛", "🚜", "🛵", "🏍️", "🛺", "🚃", "✈️", "🚁", "⛵️", "🚲", "🛴", "🚘"]
+    
+    private static func createMemoryGame()-> MemoryGame<String>{
+        return MemoryGame<String>(numberOfPairsOfCards: 4) { pairIndex in
             emojis[pairIndex]
         }
     }
-    @Published private var model: MemoryGame<String> = createMemoryGame()
+    @Published private var model = createMemoryGame()
     
-    var cards: Array<MemoryGame<String>.Card> {
+    
+    var cards: Array<Card> {
         model.cards
     }
     
     //MARK: - Intent(s)
     
-    func choose(_ card: MemoryGame<String>.Card){
-       // objectWillChange.send()
+    func choose(_ card: Card){
         model.choose(card)
     }
 }
+
 

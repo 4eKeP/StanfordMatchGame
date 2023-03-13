@@ -9,9 +9,39 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
-    private var indexOfTheFaceUpCard: Int?
+    private var indexOfTheFaceUpCard: Int?{
+        get {cards.indices.filter({cards[$0].isFaceUp}).onlyOne}
+            /*
+            var faceUpCardIndices = [Int]()
+            for index in cards.indices{
+                if cards[index].isFaceUp{
+                    faceUpCardIndices.append(index)
+                }
+            }
+             */
+        set{cards.indices.forEach{cards[$0].isFaceUp = ($0 == newValue)}
+            /*
+            if index != newValue{
+                cards[index].isFaceUp = false
+            }else{
+                cards[index].isFaceUp = true
+            }
+                */
+        }
+    }
+    
+    
     mutating func choose(_ card: Card){
-     //   if let chosenIndex = index(of: card){
+        /*
+        func index(of card: Card) -> Int? {
+            for index in 0..<cards.count {
+                if cards[index].id == card .id {
+                    return index
+                }
+            }
+            return nil
+        }
+         */
         if let chosenIndex = cards.firstIndex(where: {$0.id == card.id}),
            !cards[chosenIndex].isFaceUp,
            !cards[chosenIndex].isMached
@@ -21,30 +51,16 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     cards[chosenIndex].isMached = true
                     cards[potenchialMatchIndex].isMached = true
                 }
-                indexOfTheFaceUpCard = nil
+                cards[chosenIndex].isFaceUp.toggle()
             }else{
-                for index in cards.indices{
-                    cards[index].isFaceUp = false
-                }
                 indexOfTheFaceUpCard = chosenIndex
             }
-            cards[chosenIndex].isFaceUp.toggle()
         }
     }
-    /*
-    func index(of card: Card) -> Int? {
-        for index in 0..<cards.count {
-            if cards[index].id == card .id {
-                return index
-            }
-        }
-        return nil
-    }
-     */
+    
     
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent){
-        cards = Array<Card>()
-        //add numberOfPairsOfCards * 2 cards to cards array
+        cards = []
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = createCardContent(pairIndex)
             cards.append(Card(content: content, id: pairIndex*2))
@@ -53,10 +69,19 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     struct Card: Identifiable {
         
-        var isFaceUp: Bool = false 
-        var isMached: Bool = false
-        var content: CardContent
-        var id: Int
+        var isFaceUp = false
+        var isMached = false
+        let content: CardContent
+        let id: Int
+    }
+}
+extension Array {
+    var onlyOne: Element? {
+        if self.count == 1 {
+            return self.first
+        }else{
+            return nil
+        }
     }
 }
 

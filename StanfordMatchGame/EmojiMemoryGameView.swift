@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  StanfordMatchGame
 //
 //  Created by admin on 11.03.2023.
@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @ObservedObject var emojiMemoryGame: EmojiMemoryGame
+struct EmojiMemoryGameView: View {
+    @ObservedObject var game: EmojiMemoryGame
     
     var body: some View {
         ScrollView{
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 75))], spacing: 10) {
-                ForEach(emojiMemoryGame.cards) {card in CardView(card: card)
+                ForEach(game.cards) {card in CardView(card: card)
                         .aspectRatio(2/3, contentMode: .fit)
                         .onTapGesture {
-                            emojiMemoryGame.choose(card)
+                            game.choose(card)
                         }
                 }
             }
@@ -25,9 +25,8 @@ struct ContentView: View {
         .padding(.horizontal)
     }
 }
-
 struct CardView: View {
-    let card: MemoryGame<String>.Card
+    let card: EmojiMemoryGame.Card
     var body: some View{
         ZStack{
             let shape = RoundedRectangle(cornerRadius: 20)
@@ -49,7 +48,8 @@ struct CardView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()
-        ContentView(emojiMemoryGame: game).preferredColorScheme(.dark)
-        ContentView(emojiMemoryGame: game).preferredColorScheme(.light)
+        EmojiMemoryGameView(game: game).preferredColorScheme(.dark)
+        EmojiMemoryGameView(game: game).preferredColorScheme(.light)
     }
 }
+
