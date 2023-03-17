@@ -13,10 +13,17 @@ struct EmojiMemoryGameView: View {
     @Namespace private var dealingNamespace
     
     var body: some View {
-        VStack{
-            gameBody
+        ZStack(alignment: .bottom) {
+            VStack{
+                gameBody
+                HStack{
+                    restart
+                    Spacer()
+                    shuffle
+                }
+                .padding(.horizontal)
+            }
             deckBody
-            shuffle
         }
         .padding()
     }
@@ -88,6 +95,14 @@ struct EmojiMemoryGameView: View {
             }
         }
     }
+    var restart: some View {
+        Button("Restart"){
+            withAnimation {
+                dealt = []
+                game.restart()
+            }
+        }
+    }
     private struct CardConstants {
         static let color = Color.red
         static let aspectRatio: CGFloat = 2/3
@@ -100,11 +115,27 @@ struct EmojiMemoryGameView: View {
 }
 struct CardView: View {
     let card: EmojiMemoryGame.Card
+    @State private var animatedBonusRemaining: Double = 0
+    
     var body: some View{
         GeometryReader {geometry in
             ZStack{
-                Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: 110-90))
-                    .padding(5).opacity(0.5)
+                Group{
+                    if card.isConsumingBonusTime{
+                        Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: (1-animatedBonusRemaining)*360-90))
+                            .onAppear{
+                                animatedBonusRemaining = card.bonusRemainig
+                                withAnimation(.linear(duration: card.bonusTimeRemaining)){
+                                    animatedBonusRemaining = 0
+                                }
+                            }
+                        
+                    }else{
+                        Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: (1-card.bonusRemainig)*360-90))
+                    }
+                }
+                .padding(5)
+                .opacity(0.5)
                 Text(card.content).rotationEffect(Angle.degrees(card.isMached ? 360 : 0))
                     .animation(Animation.linear(duration: 1)
                         .repeatForever(autoreverses: false),
